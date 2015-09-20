@@ -68,8 +68,13 @@ img {
 
 <div id="loading-and-preprocessing-the-data" class="section level2">
 <h2>Loading and preprocessing the data</h2>
-<pre class="r"><code>if (!file.exists(&quot;activity.csv&quot;))
+<pre class="r"><code>if (!file.exists(&quot;activity.csv&quot;)) {
+  if (!file.exists(&quot;activity.zip&quot;))
+    download.file(&quot;https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip&quot;, 
+                  &quot;activity.zip&quot;,
+                  method = &quot;libcurl&quot;)
   unzip(&quot;activity.zip&quot;)
+}
 
 activity &lt;- transform(read.csv(&quot;activity.csv&quot;), 
                       date = strptime(date, &quot;%Y-%m-%d&quot;), 

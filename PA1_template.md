@@ -5,8 +5,13 @@ Denis Kuzminykh
 ## Loading and preprocessing the data
 
 ```r
-if (!file.exists("activity.csv"))
+if (!file.exists("activity.csv")) {
+  if (!file.exists("activity.zip"))
+    download.file("https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip", 
+                  "activity.zip",
+                  method = "libcurl")
   unzip("activity.zip")
+}
 
 activity <- transform(read.csv("activity.csv"), 
                       date = strptime(date, "%Y-%m-%d"), 

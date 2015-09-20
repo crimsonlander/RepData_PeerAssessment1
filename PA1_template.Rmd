@@ -3,7 +3,7 @@ title: "Reproducible Research: Peer Assessment 1"
 author: "Denis Kuzminykh"
 output: 
   html_document:
-    keep_md: true
+    keep_md: yes
 ---
 ```{r, echo=FALSE, results='hide'}
 Sys.setlocale("LC_TIME", "C")
@@ -13,8 +13,14 @@ library(scales)
 
 ## Loading and preprocessing the data
 ```{r}
-if (!file.exists("activity.csv"))
+
+if (!file.exists("activity.csv")) {
+  if (!file.exists("activity.zip"))
+    download.file("https://d396qusza40orc.cloudfront.net/repdata%2Fdata%2Factivity.zip", 
+                  "activity.zip",
+                  method = "libcurl")
   unzip("activity.zip")
+}
 
 activity <- transform(read.csv("activity.csv"), 
                       date = strptime(date, "%Y-%m-%d"), 
