@@ -1,18 +1,10 @@
----
-title: "Reproducible Research: Peer Assessment 1"
-author: "Denis Kuzminykh"
-output: 
-  html_document:
-    keep_md: true
----
-```{r, echo=FALSE, results='hide'}
-Sys.setlocale("LC_TIME", "C")
-library(ggplot2)
-library(scales)
-```
+# Reproducible Research: Peer Assessment 1
+Denis Kuzminykh  
+
 
 ## Loading and preprocessing the data
-```{r}
+
+```r
 if (!file.exists("activity.csv"))
   unzip("activity.zip")
 
@@ -23,7 +15,8 @@ activity <- transform(read.csv("activity.csv"),
 
 ## What is mean total number of steps taken per day?
 
-```{r}
+
+```r
 steps <- aggregate(activity$steps, by=list(date = factor(activity$date_factor)), sum, na.rm = TRUE)
 
 fig1 <- qplot(steps$x, xlab = "Number of steps", col = "red", binwidth = 2000)
@@ -32,11 +25,14 @@ fig1 <- fig1 + theme(legend.position="none") + coord_cartesian(xlim = c(0, 22000
 fig1
 ```
 
-Mean number of steps per day: `r format(mean(steps$x), 2)`  
-Median of number of steps per day: `r format(median(steps$x), 2)`
+![](PA1_template_files/figure-html/unnamed-chunk-3-1.png) 
+
+Mean number of steps per day: 9354.23  
+Median of number of steps per day: 10395
 
 ## What is the average daily activity pattern?
-```{r}
+
+```r
 daily_averages <- aggregate(activity$steps, by=list(interval = activity$interval), FUN=mean, na.rm = TRUE)
 rownames(daily_averages) <- daily_averages$interval
 # Converting intervals to datetime for plotting
@@ -51,19 +47,24 @@ fig2 <- fig2 + geom_line() + xlab("Time of day") + ylab("Average number of steps
 fig2 <- fig2 + scale_x_datetime(labels = date_format("%H:%M"), breaks = "2 hours")
 fig2 <- fig2 + coord_cartesian(xlim = summary(daily_averages$interval)[c("Min.", "Max.")])
 fig2
+```
 
+![](PA1_template_files/figure-html/unnamed-chunk-4-1.png) 
+
+```r
 max_activity_interval <- daily_averages[which.max(daily_averages$x), "interval"]
 max_activity_interval <- strftime(max_activity_interval, format = "%H:%M")
 ```
 
-Maximum 5 min activity interval: `r max_activity_interval`
+Maximum 5 min activity interval: 08:35
 
 ## Imputing missing values
 
-`r sum(is.na(activity$steps))` values are missing
+2304 values are missing
 
 I will replace missing values by average numbers of steps for the time of day, rounded to integers.
-```{r}
+
+```r
 n <- rownames(daily_averages)
 daily_averages <- daily_averages$x
 names(daily_averages) <- n
@@ -83,12 +84,15 @@ fig3 <- fig3 + theme(legend.position="none") + coord_cartesian(xlim = c(0, 22000
 fig3
 ```
 
-Mean number of steps per day: `r format(mean(steps2$x), 2)`  
-Median of number of steps per day: `r format(median(steps2$x), 2)`
+![](PA1_template_files/figure-html/unnamed-chunk-5-1.png) 
+
+Mean number of steps per day: 10765.64  
+Median of number of steps per day: 10762
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
-```{r}
+
+```r
 activity2$day_type <- as.factor(1+(weekdays(activity2$date) %in% c("Saturday", "Sunday")))
 levels(activity2$day_type) <- c("weekday", "weekend")
 
@@ -109,3 +113,5 @@ fig4 <- fig4 + scale_x_datetime(labels = date_format("%H:%M"), breaks = "2 hours
 fig4 <- fig4 + coord_cartesian(xlim = summary(daily_averages2$interval)[c("Min.", "Max.")])
 fig4
 ```
+
+![](PA1_template_files/figure-html/unnamed-chunk-6-1.png) 
