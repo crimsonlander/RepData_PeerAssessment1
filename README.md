@@ -1,3 +1,7 @@
+# Note
+
+I have accidently deleted folder with .png files from submitted commit version. These are required for viewing PA1_template.md file. If you are reviewing this, you can find plots embeded into PA1_template.html file. You can find it [here](http://crimsonlander.github.io/RepData_PeerAssessment1/ ) or download it manually.
+
 ## Introduction
 
 It is now possible to collect a large amount of data about personal
